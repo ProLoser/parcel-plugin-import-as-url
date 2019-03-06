@@ -1,0 +1,18 @@
+{
+    "name": "parcel-plugin-import-as-url",
+    "version": "1.0.0",
+    "main": "main.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/quasicomputational/parcel-plugin-import-as-url.git"
+    },
+    "author": "quasicomputational <quasicomputational@gmail.com> (https://github.com/quasicomputational)",
+    "license": "Apache-2.0",
+    "keywords": [
+        "parcel",
+        "plugin"
+    ],
+    "dependencies": {
+        "parcel-bundler": "^1.11.0"
+    }
+}
