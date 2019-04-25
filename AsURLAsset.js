@@ -21,16 +21,13 @@ class AsURLAsset extends Asset {
 
     collectDependencies() {
         // The .as-url asset is in the same directory as the target
-        // asset. So, just import it as a local dependency. But, the
-        // return value of addURLDependency is a relative URL, so we
-        // need to make sure that our importers (which can all be in
-        // different directories) get something absolute.
+        // asset. So, just import it as a local dependency. The return
+        // value of addURLDependency is a hash that gets
+        // post-processed into a relative-to-root path, so anchor it
+        // to the public URL.
         this.dst = urlJoin(
             this.options.publicURL,
-            urlJoin(
-                this.srcDir,
-                this.addURLDependency(path.join(".", this.srcName)),
-            ),
+            this.addURLDependency(path.join(".", this.srcName)),
         );
     };
 
