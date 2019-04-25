@@ -6,12 +6,10 @@ class AsURLAsset extends Asset {
     constructor(filename, options) {
         super(filename, options);
         this.type = "as-url";
-        const { root, dir, name } = path.parse(filename);
-        this.srcName = path.relative(
-            options.rootDir,
-            path.format({ root, dir, name }),
-        );
-        this.dstName = null;
+        const { dir, name } = path.parse(filename);
+        this.srcName = name;
+        this.srcDir = path.relative(options.rootDir, dir);
+        this.dst = null;
     };
 
     // The default `getDependencies` checks to see if this asset has
@@ -22,18 +20,22 @@ class AsURLAsset extends Asset {
     }
 
     collectDependencies() {
-        // The returned path is relative to this.name, but ths script
-        // that's importing us might be elsewhere, which could cause
-        // havoc. Declare it as an entry (which gives it a well-known
-        // URL) and anchor it to the public root to avoid this.
-        this.dstName = urlJoin(
+        // The .as-url asset is in the same directory as the target
+        // asset. So, just import it as a local dependency. But, the
+        // return value of addURLDependency is a relative URL, so we
+        // need to make sure that our importers (which can all be in
+        // different directories) get something absolute.
+        this.dst = urlJoin(
             this.options.publicURL,
-            this.addURLDependency("~/" + this.srcName, { entry: true }),
+            urlJoin(
+                this.srcDir,
+                this.addURLDependency(path.join(".", this.srcName)),
+            ),
         );
     };
 
     generate() {
-        const code = `export default ${JSON.stringify(this.dstName)};`;
+        const code = `export default ${JSON.stringify(this.dst)};`;
         return [
             {
                 type: "js",
