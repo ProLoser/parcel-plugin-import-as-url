@@ -28,7 +28,7 @@ class AsURLAsset extends Asset {
         // URL) and anchor it to the public root to avoid this.
         this.dstName = urlJoin(
             this.options.publicURL,
-            this.addURLDependency(this.srcName, { entry: true }),
+            this.addURLDependency("~/" + this.srcName, { entry: true }),
         );
     };
 
